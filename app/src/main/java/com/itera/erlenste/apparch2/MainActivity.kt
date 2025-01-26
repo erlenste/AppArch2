@@ -1,13 +1,13 @@
 package com.itera.erlenste.apparch2
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
@@ -26,7 +26,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,7 +49,7 @@ class MainActivity : ComponentActivity() {
             AppArch2Theme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    topBar = { ApplicationTopAppBar("Archapp") }) { innerPadding ->
+                    topBar = { ApplicationTopAppBar("Bilmodell-katalogen") }) { innerPadding ->
                     MainScreen(
                         modifier = Modifier
                             .fillMaxSize()
@@ -63,25 +62,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
 @Composable
 fun MainScreen(modifier: Modifier, viewModel: VehicleViewModel) {
-    val vehicleResponse by viewModel.vehicleResponse.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    val error by viewModel.error.collectAsState()
 
     Column(modifier = modifier.fillMaxSize()) {
-        LongBasicDropdownMenu(onValueChange = { viewModel.getVehicleResponse(it) })
-        if (isLoading) {
-            LoadingComponent()
-        }
-        if (error?.isNotEmpty() == true) {
-            Text("$error")
-        }
-        if (vehicleResponse != null && vehicleResponse!!.Results.isNotEmpty()) {
-            Log.i("MainScreen", "VehicleResponse: $vehicleResponse")
-            ResultComponent(modifier = modifier, vehicles = vehicleResponse!!.Results)
-        }
+        LongBasicDropdownMenu(onValueChange = { })
+        ResultComponent(modifier = modifier, vehicles = emptyList())
     }
 }
 
@@ -121,6 +107,7 @@ fun LongBasicDropdownMenu(onValueChange: (String) -> Unit) {
             Text("Velg et merke")
         }
         DropdownMenu(
+            modifier = Modifier.height(400.dp),
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {

@@ -12,16 +12,16 @@ class VehicleDatasource @Inject constructor() {
     suspend fun getVehicleResponse(brand: String): VehicleResponse? {
         val baseUrl = "https://vpic.nhtsa.dot.gov/api/"
         val vehicleUrl = "vehicles/getmodelsformake/{brand}?format=json"
+
         val vehicleApi: VehicleApi = Retrofit.getLoggingInstance(baseUrl).create(VehicleApi::class.java)
 
-        Log.i("VehicleDatasource", "Getting vehicles for: $brand")
+        Log.d("VehicleDatasource", "Getting vehicles for: $brand")
 
         val vehicleResponse : Response<VehicleResponse> = vehicleApi.getModels(vehicleUrl.replace("{brand}", brand))
         if (!vehicleResponse.isSuccessful) {
-            throw Exception("Failed to get vehicles for: $brand")
+            throw Exception("Det har skjedd en feil ved henting av bilmodeller for: $brand")
         }
         return vehicleResponse.body()
     }
-
 
 }

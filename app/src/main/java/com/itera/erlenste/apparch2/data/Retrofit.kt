@@ -28,8 +28,7 @@ object Retrofit {
     fun getLoggingInstance(url: String): Retrofit {
         val client = OkHttpClient()
         val interceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-        val clientBuilder: OkHttpClient.Builder =
-            client.newBuilder().addInterceptor(interceptor as HttpLoggingInterceptor)
+        val clientBuilder: OkHttpClient.Builder = client.newBuilder().addInterceptor(interceptor)
 
         return Retrofit.Builder().baseUrl(url)
             .addConverterFactory(GsonConverterFactory.create())
