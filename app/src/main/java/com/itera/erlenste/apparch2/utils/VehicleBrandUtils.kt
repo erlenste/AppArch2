@@ -6,6 +6,7 @@ open class VehicleBrandUtils {
 
     open fun getBrands(): List<String> {
         val brands = immutableListOf(
+            "",
             "audi",
             "alfa-romeo",
             "bmw",

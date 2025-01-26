@@ -5,26 +5,21 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -37,7 +32,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -67,13 +61,21 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+
 @Composable
 fun MainScreen(modifier: Modifier, viewModel: ArchViewModel) {
     val vehicleResponse by viewModel.vehicleResponse.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val isError by viewModel.error.collectAsState()
 
     Column(modifier = modifier.fillMaxSize()) {
         LongBasicDropdownMenu(onValueChange = { viewModel.getVehicleResponse(it) })
-        //Button(onClick = { viewModel.getVehicleResponse("honda") }, modifier = Modifier) { Text("Get Honda Models") }
+        if (isLoading) {
+            LoadingComponent()
+        }
+        if (isError?.isNotEmpty() == true) {
+            Text("Det skjedde en feil: $isError")
+        }
         if (vehicleResponse != null && vehicleResponse!!.Results.isNotEmpty()) {
             Log.i("MainScreen", "VehicleResponse: $vehicleResponse")
             ResultComponent(modifier = modifier, vehicles = vehicleResponse!!.Results)
@@ -105,7 +107,7 @@ fun VehicleCard(modifier: Modifier, vehicle: Vehicle) {
 }
 
 @Composable
-fun LongBasicDropdownMenu(onValueChange: (String) -> Unit = {}) {
+fun LongBasicDropdownMenu(onValueChange: (String) -> Unit) {
     var expanded by remember { mutableStateOf(false) }
     val brands = VehicleBrandUtils().getBrands()
 
@@ -125,11 +127,21 @@ fun LongBasicDropdownMenu(onValueChange: (String) -> Unit = {}) {
                     text = { Text(option) },
                     onClick = {
                         onValueChange(option)
+                        expanded = false
                     }
                 )
             }
         }
     }
+}
+
+@Composable
+fun LoadingComponent(modifier: Modifier = Modifier) {
+    CircularProgressIndicator(
+        modifier = Modifier.width(64.dp),
+        color = MaterialTheme.colorScheme.secondary,
+        trackColor = MaterialTheme.colorScheme.surfaceVariant,
+    )
 }
 
 @Preview(showBackground = true)
@@ -168,7 +180,6 @@ fun PreviewLongBasicDropdownMenu() {
         )
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

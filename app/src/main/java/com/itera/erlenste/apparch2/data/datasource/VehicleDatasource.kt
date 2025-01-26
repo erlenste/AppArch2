@@ -15,7 +15,9 @@ class VehicleDatasource {
 
         Log.i("VehicleDatasource", "Getting vehicles for: $brand")
         val vehicleResponse : Response<VehicleResponse> = vehicleApi.getModels(vehicleUrl.replace("{brand}", brand))
-
+        if (!vehicleResponse.isSuccessful) {
+            throw Exception("Failed to get vehicles for: $brand")
+        }
         return vehicleResponse.body()
     }
 

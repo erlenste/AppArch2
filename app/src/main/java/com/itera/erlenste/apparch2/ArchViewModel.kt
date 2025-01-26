@@ -18,10 +18,24 @@ class ArchViewModel : ViewModel() {
     private val _vehicleResponse = MutableStateFlow<VehicleResponse?>(null)
     val vehicleResponse: StateFlow<VehicleResponse?> = _vehicleResponse.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
+    private val _error = MutableStateFlow<String?>(null)
+    val error: StateFlow<String?> = _error.asStateFlow()
+
 
     fun getVehicleResponse(brand: String) {
+        _isLoading.value = true
         viewModelScope.launch {
-            _vehicleResponse.value = vehicleRepository.getVehicleResponse(brand)
+            try {
+                _vehicleResponse.value = vehicleRepository.getVehicleResponse(brand)
+                _error.value = null
+            } catch (e: Exception) {
+                _error.value = e.message
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 }
