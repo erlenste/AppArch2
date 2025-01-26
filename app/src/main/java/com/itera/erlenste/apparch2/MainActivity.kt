@@ -39,7 +39,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.itera.erlenste.apparch2.data.model.Vehicle
 import com.itera.erlenste.apparch2.ui.theme.AppArch2Theme
 import com.itera.erlenste.apparch2.utils.VehicleBrandUtils
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,18 +65,18 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun MainScreen(modifier: Modifier, viewModel: ArchViewModel) {
+fun MainScreen(modifier: Modifier, viewModel: VehicleViewModel) {
     val vehicleResponse by viewModel.vehicleResponse.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
-    val isError by viewModel.error.collectAsState()
+    val error by viewModel.error.collectAsState()
 
     Column(modifier = modifier.fillMaxSize()) {
         LongBasicDropdownMenu(onValueChange = { viewModel.getVehicleResponse(it) })
         if (isLoading) {
             LoadingComponent()
         }
-        if (isError?.isNotEmpty() == true) {
-            Text("Det skjedde en feil: $isError")
+        if (error?.isNotEmpty() == true) {
+            Text("$error")
         }
         if (vehicleResponse != null && vehicleResponse!!.Results.isNotEmpty()) {
             Log.i("MainScreen", "VehicleResponse: $vehicleResponse")

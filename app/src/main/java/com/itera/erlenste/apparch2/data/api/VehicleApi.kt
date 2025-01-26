@@ -8,5 +8,5 @@ import retrofit2.http.Url
 interface VehicleApi {
 
     @GET
-    suspend fun getModels(@Url url: String) : Response<VehicleResponse>
+    suspend fun getModels(@Url url: String): Response<VehicleResponse>
 }

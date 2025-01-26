@@ -20,7 +20,7 @@ open class VehicleBrandUtils {
             "hyundai",
             "jaguar",
             "kia",
-            "land-rover",
+            "land rover",
             "lotus",
             "mercedes-benz",
             "maserati",
