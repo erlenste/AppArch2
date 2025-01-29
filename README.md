@@ -10,6 +10,7 @@
 
 ### API
 Fetches vehicle data from [NHTSA](https://vpic.nhtsa.dot.gov/api/)
+
 Endpoint used in this example: [Get Models for Make](https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/honda?format=json)
 
 ### Overview of app
